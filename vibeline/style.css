@@ -1,0 +1,484 @@
+/* NES Theme Styles */
+body {
+    font-family: Arial, Helvetica, sans-serif; /* UPDATED: Default font */
+    margin: 0;
+    padding: 0;
+    background-color: #d1d1d1; /* UPDATED: Light Grey */
+    color: #222222; /* UPDATED: Dark Charcoal */
+    display: flex;
+    flex-direction: column; 
+    height: 100vh; 
+}
+
+.header {
+    height: 50px;
+    background-color: #a0a0a0; /* UPDATED: Dark Grey */
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0; 
+}
+
+.header-title {
+    font-family: 'Press Start 2P', cursive; /* UPDATED: Pixel font */
+    font-size: 1.4em; /* Adjust size for pixel font */
+    margin: 0;
+    font-weight: normal; /* Pixel font often doesn't need bold */
+    color: #222222; /* UPDATED: Dark Charcoal */
+    margin-right: 0; 
+}
+
+/* Apply pixel font to other headers */
+h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.1em; /* Adjust size */
+    font-weight: normal;
+    margin-bottom: 15px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    position: relative; 
+    align-items: stretch; 
+    flex-grow: 1; 
+    overflow-y: auto; 
+
+    /* Scrollbar Styling - NES */
+    &::-webkit-scrollbar {
+        width: 10px; /* Slightly thicker for blocky feel? */
+    }
+    &::-webkit-scrollbar-track {
+        background: #a0a0a0; /* UPDATED: Dark Grey */
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #5850ae; /* UPDATED: SNES Purple */
+        border-radius: 0; /* Remove rounding for blocky feel */
+        border: 2px solid #a0a0a0; 
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #46408a; /* Darker Purple */
+    }
+    scrollbar-width: thin; /* Firefox doesn't support thick blocky well */
+    scrollbar-color: #5850ae #a0a0a0; /* UPDATED: thumb track */
+}
+
+.timeline-container {
+    width: 225px; 
+    flex-shrink: 0; 
+    padding: 20px;
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    box-sizing: border-box;
+    position: relative;
+    background-color: #a0a0a0; /* UPDATED: Dark Grey */
+    z-index: 1; 
+}
+
+.main-content-column { 
+    flex-grow: 1; 
+    padding: 20px; 
+    overflow-y: auto; 
+    /* background-color: lightblue; */ /* DEBUG: Remove this */
+}
+
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative; 
+    /* padding-left: 30px; */ /* Adjust as needed */
+}
+
+/* Vertical Bar */
+.timeline::before {
+    background: #444444; /* UPDATED: Darker Grey/Charcoal */
+    /* Positioning might need slight adjustment based on font */
+    left: 66px; 
+    width: 4px; /* Thicker? */
+    /* ... */
+}
+
+.timeline li {
+    font-family: 'Press Start 2P', cursive; /* ADD: Pixel font */
+    font-size: 0.8em; /* Adjust size */
+    color: #222222; /* Match main text */
+    padding: 6px 0; /* Adjust padding */
+    padding-right: 25px; /* Keep space */
+    cursor: pointer;
+    text-align: left; 
+    position: relative; 
+    margin: 2px 0; 
+    display: block; 
+}
+
+/* Marker Dot */
+.timeline li::before {
+    background: #444444; /* UPDATED: Darker Grey/Charcoal */
+    /* Positioning might need slight adjustment */
+    left: 51px; 
+    width: 10px; /* Larger? */
+    height: 10px; /* Larger? */
+    border-radius: 0; /* Square dots? */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    transition: background-color 0.2s ease;
+}
+
+/* Remove background highlight */
+.timeline li:hover {
+    /* background-color: #dcd8cc; */
+}
+.timeline li.selected {
+    font-weight: normal; /* Pixel font doesn't usually need bold */
+    color: #5850ae; /* Highlight text purple */
+}
+
+/* Keep marker highlight */
+.timeline li:hover::before,
+.timeline li.selected::before {
+    background: #5850ae; /* UPDATED: SNES Purple */
+}
+
+/* Arrow for selected item - LINE SEGMENT only - COMMENT OUT */
+/*
+.timeline li.selected::after {
+   display: block;
+   content: '';
+   position: absolute;
+   left: 58px; 
+   top: 50%;
+   transform: translateY(-50%);
+   height: 2px; 
+   width: var(--connector-line-width, 0); 
+   background-color: #8b8573;
+   opacity: 0; 
+   visibility: hidden;
+   transition: width 0.05s linear, opacity 0.2s ease-out, visibility 0.2s ease-out; 
+}
+*/
+
+/* Show line when selected and width is set - COMMENT OUT */
+/*
+.timeline li.selected[style*="--connector-line-width"]:not([style*="width: 0px"])::after {
+    opacity: 1;
+    visibility: visible;
+}
+*/
+
+/* Remove Arrowhead SPAN styles */
+/*
+.timeline li .arrowhead { ... }
+.timeline li.selected .arrowhead { ... }
+*/
+
+.tiles-container { 
+    flex-grow: 1; 
+    margin: 20px 10px; 
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #eeeeee; /* UPDATED: Tile Background Grey */
+    border-radius: 0px; /* Remove rounding? */
+    border: 2px solid #a0a0a0; /* Add border? */
+    box-shadow: none; /* Remove shadow? */
+    overflow-y: auto;
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out; 
+    z-index: 2; 
+    align-self: flex-start; 
+}
+
+.tiles-container.tiles-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Remove highlight band and highlighted state */
+/*
+#highlight-band {
+    ...
+}
+.tiles-container.highlighted {
+    ...
+}
+*/
+
+.menu-container {
+    width: 225px; 
+    flex-shrink: 0; 
+    box-sizing: border-box;
+    position: relative;
+    background-color: #a0a0a0; /* UPDATED: Dark Grey */
+    z-index: 1; 
+}
+
+#hamburger-btn {
+    position: static; /* Ensure it's in flex flow */
+    margin-left: 20px; /* Add some space */
+    background: none;
+    border: none;
+    font-size: 1.8em; 
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    color: #222222; /* UPDATED: Dark Charcoal */
+}
+
+#hamburger-btn:hover {
+    color: #5850ae; /* UPDATED: Purple */
+}
+
+#filter-panel { 
+    position: absolute;
+    top: 100%; /* Below header */
+    right: 15px; /* Near right edge */
+    left: auto; /* Ensure right positioning takes precedence */
+    width: 180px; 
+    background-color: #a0a0a0; /* UPDATED: Dark Grey */
+    border: 2px solid #444444; /* UPDATED: Darker Border */
+    border-radius: 0;
+    box-shadow: none;
+    padding: 15px;
+    z-index: 20; 
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    color: #222222; /* ADD: Default text color */
+}
+
+/* Style Controls container */
+#filter-container .controls {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 5px; /* Spacing between buttons */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+}
+
+#filter-panel button {
+    font-family: Arial, Helvetica, sans-serif; /* Keep readable */
+    background-color: #d1d1d1; /* UPDATED: Light Grey */
+    color: #222222;
+    border: 2px solid #444444; /* UPDATED: Thicker border */
+    border-radius: 0; /* ADD: Explicitly square */
+    padding: 5px 10px; /* Adjust padding */
+    cursor: pointer;
+    font-size: 0.8em; /* Slightly smaller text */
+}
+#filter-panel button:hover {
+    background-color: #eeeeee; /* UPDATED: Lighter Grey */
+    color: #5850ae; /* UPDATED: Purple text */
+    border-color: #222222; /* Optional: Darker border on hover? */
+}
+#filter-panel label {
+     display: block; 
+     margin-bottom: 6px; /* Adjust spacing */
+     font-size: 0.9em; /* Slightly smaller label */
+     font-family: Arial, Helvetica, sans-serif; /* Keep readable */
+}
+
+/* Style Checkboxes */
+#filter-panel input[type="checkbox"] {
+    margin-right: 5px; /* Space between box and label */
+    accent-color: #5850ae; /* UPDATED: Purple checkmark */
+    /* Basic attempt to make it look blockier, browser support varies */
+    appearance: none; 
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #444444;
+    background-color: #eeeeee;
+    vertical-align: middle; /* Align with text */
+    position: relative;
+    cursor: pointer;
+}
+
+#filter-panel input[type="checkbox"]::before {
+    content: "";
+    display: block;
+    width: 6px; /* Inner check size */
+    height: 6px;
+    background-color: #5850ae; /* Purple check */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.1s ease-in-out;
+}
+
+#filter-panel input[type="checkbox"]:checked::before {
+    transform: translate(-50%, -50%) scale(1); 
+}
+
+/* Remove .menu-container styles */
+/*
+.menu-container {
+    ...
+}
+*/
+
+/* Remove the old speech bubble pointer */
+.tiles-container::before {
+    /* content: ''; */
+    /* ... removed properties ... */
+    display: none; /* Hide it */
+}
+
+/* Restore SVG styles */
+#connector-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3; /* On top */
+    display: block; /* Ensure SVG is displayed */
+}
+#connector-line {
+     stroke: #5850ae;  /* UPDATED: SNES Purple */
+     stroke-width: 4; /* Thicker? */
+     display: block; /* Ensure line is displayed */
+}
+
+.tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.tile {
+    border: 2px solid #a0a0a0; /* UPDATED: Dark Grey */
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+    background-color: #d1d1d1; /* UPDATED: Light Grey */
+    border-radius: 0px; /* Remove rounding */
+}
+
+.tile img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.tile .caption {
+    font-size: 0.9em;
+    color: #222222; /* UPDATED: Dark Charcoal */
+}
+
+.tile .category {
+    font-size: 0.8em;
+    color: #666666; /* UPDATED: Medium Grey */
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.filter-panel-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.filter-panel-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+#filter-panel #filter-container {
+    margin-bottom: 0; /* Remove original spacing */
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* ADD Floating Credits Rules */
+#credits {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 50; /* Ensure it's above other content */
+}
+
+#credits span {
+    font-size: 0.8em; /* Smaller font size */
+    color: #444444; /* Slightly lighter text? */
+}
+
+#credits a {
+    line-height: 0;
+}
+
+#credits .github-icon { /* Use class from SVG */
+    width: 18px; /* Smaller icon */
+    height: 18px;
+    fill: #444444; /* Match text */
+    transition: fill 0.2s ease;
+}
+
+#credits .github-icon:hover {
+    fill: #5850ae; /* Highlight purple */
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .container {
+        /* Keep default flex-direction: row */
+        align-items: stretch; /* Keep children full height unless overridden */
+    }
+
+    .timeline-container {
+        width: 100px;        /* Use percentage width */
+        min-width: 80px;    /* Prevent collapsing too much */
+        padding: 10px 5px;    /* Adjust padding */
+        flex-shrink: 0;       /* Don't shrink initially */
+        height: auto;         /* Let height adjust if needed */
+    }
+
+    .menu-container {
+        display: none;       /* Half of desktop width */
+        min-width: 60px;    /* Prevent collapsing too much */
+        flex-shrink: 0;      /* Don't shrink initially */
+        height: auto;         /* Let height adjust */
+    }
+
+    .tiles-container {
+        /* flex-grow: 1 implicitly fills space */
+        margin: 10px;         /* Adjust margins */
+        align-self: flex-start; /* Keep override */
+        /* min-height: initial; Restore default */ 
+        /* transition: default; Restore default */ 
+    }
+
+    /* Optional: Adjust timeline text/dots based on narrow width */
+    .timeline {
+        /* Example: Reduce padding/margins if needed */
+    }
+    /* ADD: Make Timeline header smaller */
+    .timeline-container h2 {
+        font-size: 0.9em; /* Adjust as needed */
+        margin-top: 0; /* Optional: Adjust top margin */
+    }
+    .timeline::before { /* Vertical bar */
+        left: 40px; 
+    }
+     .timeline li::before { /* Dot */
+        left: 33px; 
+    }
+     .timeline li {
+         /* Maybe smaller padding-right */
+         /* padding-right: 10px; */
+     }
+    
+    /* SVG line will still be drawn by JS, might look okay or need adjustment */
+
+    /* Adjust filter panel if needed */
+    #filter-panel {
+        width: calc(100% - 40px);
+        right: 20px; 
+    }
+} 
