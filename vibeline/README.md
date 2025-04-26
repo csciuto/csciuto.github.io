@@ -1,67 +1,42 @@
-# Vibeline - A Personal Timeline
+# Dev Landing Page
 
-This project is an interactive, filterable timeline displaying personal and cultural milestones, styled with a retro NES theme.
+Minimal landing page for developers.
 
-## How It Was Made
+Developers don't talk much. Their code does all the talking. So here's a minimal landing page for developers.
 
-*   **Frontend:** Built with standard HTML, CSS, and vanilla JavaScript.
-    *   HTML structures the content (header, timeline list, tile display area).
-    *   CSS handles all styling, including the NES color palette, layout (using Flexbox), animations, and mobile responsiveness (`style.css`). The 'Press Start 2P' font is used for the retro feel.
-    *   JavaScript (`script.js`) fetches data, builds the timeline and tile views dynamically, handles user interactions (hover/click), category filtering, connector line drawing, and mobile adjustments.
-*   **Data:** Timeline events are stored in `data.json`.
-*   **Development:** Pair-programmed with an AI assistant.
+## Why? [![start with why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)](http://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action)
 
-## Adding Timeline Items
+I wanted a dev landing page to showcase everything I do online and I wanted it to be minimal and right to the point rather beautiful and hefty. And I think most of the devs out there would want the same.
 
-To add new items to the timeline:
+So I sat down one night and created this **Dev Landing Page**. Feel free to fork, clone, play around and make this your own.
 
-1.  Open the `data.json` file.
-2.  Find the desired year key (e.g., `"1996"`). If the year doesn't exist, add it as a new key with an empty array `[]` as its value.
-3.  Add a new JSON object `{...}` to the array for that year.
-4.  Each object *must* have a `year` (number) and `category` (string).
-5.  Include a `caption` (string) to describe the event.
-6.  Include a `photo` (string) which can be:
-    *   A **web URL** (e.g., `"https://upload.wikimedia.org/wikipedia/en/0/05/MarioKart64BoxArt.jpg"`). The `download_images.py` script can fetch these.
-    *   A **local path** relative to the project root (e.g., `"images/1996/game_mk64.jpg"`). You'll need to place the image file there manually *before* loading the page.
+## Themes
 
-**Example Entry in `data.json`:**
+Dev Landing Page comes in 9 **material themes**.
 
-```json
-  "1996": [
-    {
-      "year": 1996,
-      "category": "game",
-      "caption": "Mario Kart 64 released (Japan)",
-      "photo": "https://upload.wikimedia.org/wikipedia/en/0/05/MarioKart64BoxArt.jpg"
-    },
-    {
-      "year": 1996,
-      "category": "film",
-      "caption": "Space Jam released",
-      "photo": "images/1996/film_spacejam.jpg" // Assumes you added this file manually
-    }
-    // ... more items for 1996
-  ],
-```
+![9 Material Themes](https://image.ibb.co/jJVKCn/dev_landing_page_themes.jpg)
 
-You can have multiple items for the same year, and multiple items with the same category within a year.
+If none of these themes fit within your taste, it's quite easy to customize and create your own too. 
 
-## Scripts
+## GitHub Pages
 
-### `download_images.py`
+GitHub makes it easy to create personal websites. Follow this link - [GitHub Pages](https://pages.github.com/) to know how or follow the steps below.
 
-*   **Purpose:** Reads `data.json`, finds items with web URLs in the `photo` field, downloads the images, and saves them locally into the `images/YYYY/` directory structure (where `YYYY` is the year). It then **updates** `data.json` to replace the original web URLs with the new local file paths.
-*   **Usage:**
-    1.  Make sure you have Python installed.
-    2.  Install the necessary library: `pip install requests`
-    3.  Run the script from the project's root directory: `python download_images.py`
-*   **Note:** The script automatically decodes URL-encoded characters (like `%28` for `(`) in filenames to prevent issues with file serving. It will skip downloading files that already exist locally or entries that already use a local `images/...` path.
+If you already have a GitHub profile (obviously)
 
-## Running Locally
+* Create a new repo with the name `{username}.github.io`
+* Clone/Fork this repo and copy the files to your newly created repo
+* Customize your name, links and everything else for your landing page
+* `git push`
 
-Simply open the `index.html` file in your web browser. For best results (especially avoiding potential CORS issues if you ever load data differently), using a simple local web server is recommended:
+Voila! Your site should be live at `https://{username}.github.io`
 
-*   If you have Python 3: `python -m http.server`
-*   Using Node.js `http-server`: `npx http-server`
+Here's my **Dev Landing Page** - [Dinesh Pandiyan - portfolio v1](https://portfoliov1.dineshpandiyan.com)
 
-Then navigate to the provided local address (e.g., `http://localhost:8000`). 
+### Custom Domain
+
+If you want to make your new landing page available under a domain like `{username}.com` you can get started here - [Setting up a custom domain](https://help.github.com/articles/quick-start-setting-up-a-custom-domain/).
+
+## License
+
+MIT © Dinesh Pandiyan
