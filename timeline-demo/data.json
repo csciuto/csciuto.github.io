@@ -1,54 +1,47 @@
   {
   "1970": [
     {
-      "year": 1970,
-      "category": "tv",
-      "title": "Rubber Duckie single released",
-      "img": "images/1970/Rubber_Duckie_single_cover.jpg"
+      "caption": "Sesame Street releases the children’s single “Rubber Duckie.”",
+      "photo": "images/1970/Rubber_Duckie_single.jpg",
+      "category": "music"
     },
     {
-      "year": 1970,
-      "category": "music",
-      "title": "\"Sing\" becomes a hit",
-      "img": "images/1970/Sing_Sesame_Street_song.jpg"
+      "caption": "\"Sing\" becomes a Sesame Street hit.",
+      "photo": "images/1970/Sing_Sesame_Street_song.jpg",
+      "category": "music"
     }
   ],
   "1975": [
     {
-      "year": 1975,
-      "category": "tv",
-      "title": "\"Cracks\" Sesame Street short",
-      "img": "images/1975/Cracks_Sesame_Street_short.jpg"
+      "caption": "\"Cracks\" Sesame Street short aired.",
+      "photo": "images/1975/Cracks_Sesame_Street_short.png",
+      "category": "tv"
     }
   ],
   "1977": [
     {
-      "year": 1977,
-      "category": "film",
-      "title": "Star Wars released",
-      "img": "images/1977/Star_Wars_Style_A_poster.jpg"
+      "caption": "Star Wars premieres, launching a cultural phenomenon.",
+      "photo": "images/1977/Star_Wars_Style_A_poster.jpg",
+      "category": "movies"
     },
     {
-      "year": 1977,
-      "category": "tv",
-      "title": "Iftah Ya Simsim debuts",
-      "img": "images/1977/Iftah_Ya_Simsim_poster.jpg"
+      "caption": "Iftah Ya Simsim, the Arabic version of Sesame Street, debuts.",
+      "photo": "images/1977/Iftah_Ya_Simsim_poster.jpg",
+      "category": "tv"
     }
   ],
   "1981": [
     {
-      "year": 1981,
-      "category": "tech",
-      "title": "MTV launches",
-      "img": "images/1981/MTV_1981_logo.svg"
+      "caption": "MTV launches, changing the music landscape with music videos.",
+      "photo": "images/1981/MTV_1981_logo.svg",
+      "category": "tech"
     }
   ],
   "1982": [
     {
-      "year": 1982,
-      "category": "film",
-      "title": "E.T. the Extra-Terrestrial",
-      "img": "images/1982/E.T._the_Extra-Terrestrial_poster.jpg"
+      "caption": "E.T. the Extra-Terrestrial arrives in theaters.",
+      "photo": "images/1982/E.T._the_Extra-Terrestrial_poster.jpg",
+      "category": "movies"
     }
   ],
   "1983": [
