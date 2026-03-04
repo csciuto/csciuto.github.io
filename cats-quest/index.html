@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cat's Quest - A Sierra On-Line Adventure</title>
+<title>Cat's Quest</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:monospace;overflow:hidden;user-select:none}
@@ -354,7 +354,7 @@ function parse(raw){
   if(t==="xyzzy"){showMsg("A hollow voice says: 'Mrow.'");sfx.pickup();return;}
   if(t==="debug"){debugMode=!debugMode;return;}
   if(t==="test"||t==="run tests"){runTests();return;}
-  if(t==="version"||t==="about"){showMsg("Cat's Quest v1.0 - A Sierra On-Line style adventure. EGA graphics, 8-bit audio. 1987 forever.");return;}
+  if(t==="version"||t==="about"){showMsg("Cat's Quest v1.0 — A pixel art text adventure. EGA graphics, 8-bit audio. 1987 forever.");return;}
 
   // ── ANIMATED CAT VERBS ──
   if(t==="meow"||t==="mew"||t==="mrow"||t==="yowl"){
@@ -976,7 +976,7 @@ function drawKitch(){
   X.fillStyle=E.lcyan;X.fillRect(0,TOP,GW,FLOOR-TOP);
   for(let y=TOP+62;y<FLOOR-4;y+=8)for(let x=55;x<270;x+=8){X.fillStyle=((Math.floor(x/8)+Math.floor(y/8))%2)?"#88DDDD":E.lcyan;X.fillRect(x,y,8,8);}
   X.fillStyle=E.white;X.fillRect(0,FLOOR-4,GW,4);
-  for(let y=FLOOR;y<GH;y+=8)for(let x=0;x<GW;x+=8){X.fillStyle=((Math.floor(x/8)+Math.floor((y-FLOOR)/8))%2)?E.lgray:E.white;X.fillRect(x,y,8,8);}
+  for(let y=FLOOR;y<GH;y+=32)for(let x=0;x<GW;x+=32){X.fillStyle="#1A2530";X.fillRect(x,y,32,32);X.fillStyle="#2A3A4A";X.fillRect(x+1,y+1,30,30);}
   // Fridge — dark grey, retro 1987 style
   X.fillStyle=E.dgray;X.fillRect(10,28,42,114);X.fillStyle="#444";X.fillRect(12,30,38,50);X.fillRect(12,82,38,58);X.fillStyle=E.lgray;X.fillRect(46,50,3,8);X.fillRect(46,106,3,8);dT("COOL",20,34,E.lgray);
   X.fillStyle=E.red;X.fillRect(18,86,4,4);X.fillStyle=E.lgreen;X.fillRect(30,90,4,4);X.fillStyle=E.yellow;X.fillRect(38,84,4,4);
