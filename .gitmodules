@@ -1,6 +1,6 @@
 [submodule "cats-quest"]
 	path = cats-quest
-	url = git@github.com:csciuto/timeline-demo.git
+	url = git@github.com:csciuto/cats-quest.git
 [submodule "timeline-demo"]
 	path = timeline-demo
 	url = git@github.com:csciuto/timeline-demo.git
