@@ -7,3 +7,6 @@
 [submodule "meowpiano"]
 	path = meowpiano
 	url = ../meowpiano
+[submodule "goob_nonna"]
+	path = goob_nonna
+	url = ./goob_nonna
