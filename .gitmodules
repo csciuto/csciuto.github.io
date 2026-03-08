@@ -9,4 +9,4 @@
 	url = ../meowpiano
 [submodule "goob_nonna"]
 	path = goob_nonna
-	url = ./goob_nonna
+	url = git@github-personal.com:csciuto/goob_nonna.git
