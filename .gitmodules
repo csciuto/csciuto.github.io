@@ -6,7 +6,7 @@
 	url = git@github.com:csciuto/timeline-demo.git
 [submodule "meowpiano"]
 	path = meowpiano
-	url = ../meowpiano
+	url = git@github.com:csciuto/meowpiano.git 
 [submodule "goob_nonna"]
 	path = goob_nonna
-	url = git@github-personal.com:csciuto/goob_nonna.git
+	url = git@github.com:csciuto/goob_nonna.git
