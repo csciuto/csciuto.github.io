@@ -10,3 +10,6 @@
 [submodule "goob_nonna"]
 	path = goob_nonna
 	url = git@github.com:csciuto/goob_nonna.git
+[submodule "am-inc-exp"]
+	path = am-inc-exp
+	url = git@github.com:csciuto/am-inc-exp.git
