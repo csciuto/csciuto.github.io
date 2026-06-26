@@ -13,3 +13,6 @@
 [submodule "am-inc-exp"]
 	path = am-inc-exp
 	url = git@github.com:csciuto/am-inc-exp.git
+[submodule "rent-gap"]
+	path = rent-gap
+	url = git@github.com:csciuto/rent-gap.git
