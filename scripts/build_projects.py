@@ -10,6 +10,7 @@ import html
 import json
 import os
 import pathlib
+import urllib.parse
 import urllib.request
 from datetime import datetime
 
@@ -19,11 +20,14 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "projects" / "index.html"
 
 
+HEADERS = {"Accept": "application/vnd.github+json", "User-Agent": "build-projects"}
+if os.environ.get("GITHUB_TOKEN"):
+    HEADERS["Authorization"] = "Bearer " + os.environ["GITHUB_TOKEN"]
+
+
 def fetch_repos():
     repos, page = [], 1
-    headers = {"Accept": "application/vnd.github+json", "User-Agent": "build-projects"}
-    if os.environ.get("GITHUB_TOKEN"):
-        headers["Authorization"] = "Bearer " + os.environ["GITHUB_TOKEN"]
+    headers = HEADERS
     while True:
         url = f"https://api.github.com/users/{USER}/repos?per_page=100&page={page}"
         with urllib.request.urlopen(urllib.request.Request(url, headers=headers)) as r:
@@ -34,18 +38,37 @@ def fetch_repos():
         page += 1
 
 
+def preview_url(repo):
+    """The app's preview.png (made by `npm run screenshot`), if the repo has one.
+
+    preview.png sits next to the app's index.html, so its repo path is the
+    homepage path minus the leading /<repo>/.
+    """
+    sub = urllib.parse.urlparse(repo["homepage"]).path.strip("/").split("/", 1)
+    path = (sub[1] + "/" if len(sub) > 1 else "") + "preview.png"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(
+                f"https://api.github.com/repos/{repo['full_name']}/contents/{path}", headers=HEADERS), timeout=20):
+            return repo["homepage"].rstrip("/") + "/preview.png"
+    except Exception:
+        return None
+
+
 def card(repo):
     e = html.escape
-    pushed = datetime.strptime(repo["pushed_at"][:10], "%Y-%m-%d").strftime("%b %Y")
+    img = preview_url(repo)
+    shot = (f'<a class="shot" href="{e(repo["homepage"])}" tabindex="-1">'
+            f'<img src="{e(img)}" alt="" loading="lazy" width="1200" height="630"></a>') if img else ""
+    made = datetime.strptime(repo["created_at"][:10], "%Y-%m-%d").strftime("%b %Y")
     lang = f'<span>{e(repo["language"])}</span>' if repo.get("language") else ""
     return f"""
-    <article class="card">
+    <article class="card">{shot}
       <h2><a href="{e(repo["homepage"])}">{e(repo["name"])}</a></h2>
       <p>{e(repo.get("description") or "")}</p>
       <footer>
         <a class="btn" href="{e(repo["homepage"])}">Open app</a>
         <a href="{e(repo["html_url"])}">Source</a>
-        <span class="meta">{lang}<span>Updated {pushed}</span></span>
+        <span class="meta">{lang}<span>{made}</span></span>
       </footer>
     </article>"""
 
@@ -55,7 +78,7 @@ def main():
         r for r in fetch_repos()
         if TOPIC in r.get("topics", []) and not r["archived"] and not r["private"] and r.get("homepage")
     ]
-    apps.sort(key=lambda r: r["pushed_at"], reverse=True)
+    apps.sort(key=lambda r: r["created_at"], reverse=True)
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(PAGE.replace("{{CARDS}}", "".join(card(r) for r in apps)).replace("{{COUNT}}", str(len(apps))))
     print(f"wrote {OUT.relative_to(ROOT)} with {len(apps)} projects")
@@ -97,8 +120,11 @@ PAGE = """<!DOCTYPE html>
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .card {
     background: var(--card); border: 1px solid var(--line); border-radius: 10px;
-    padding: 20px; display: flex; flex-direction: column;
+    padding: 20px; display: flex; flex-direction: column; overflow: hidden;
   }
+  .shot { display: block; margin: -20px -20px 16px; border-bottom: 1px solid var(--line); }
+  .shot img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; object-fit: cover;
+    border-radius: 10px 10px 0 0; }
   .card h2 { font-size: 1.15rem; margin: 0 0 6px; }
   .card h2 a { color: var(--text); text-decoration: none; }
   .card h2 a:hover { color: var(--link); }
