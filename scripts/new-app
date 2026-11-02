@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Create a new app repo from csciuto/app-template, publish it on GitHub Pages,
+# and list it on https://corey.sciu.to/projects/.
+#
+#   new-app <name> "<one-sentence description>" ["Display Title"] [--unlisted]
+#
+# The app goes live at https://corey.sciu.to/<name>/ and is cloned into
+# ~/workspace/<name>. --unlisted publishes it but keeps it off the projects page
+# (add the corey-app topic later to list it).
+set -euo pipefail
+
+usage() { sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+
+USER_NAME=csciuto
+WORKSPACE="$HOME/workspace"
+LISTED=1
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+    --unlisted) LISTED=0 ;;
+    -h|--help) usage ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+[ ${#ARGS[@]} -ge 2 ] || usage
+NAME="${ARGS[0]}"
+DESC="${ARGS[1]}"
+TITLE="${ARGS[2]:-$(echo "$NAME" | tr '_-' '  ' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')}"
+URL="https://corey.sciu.to/$NAME/"
+
+[[ "$NAME" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "Repo names can only use letters, digits, '.', '_' and '-'." >&2; exit 1; }
+[ -e "$WORKSPACE/$NAME" ] && { echo "$WORKSPACE/$NAME already exists." >&2; exit 1; }
+
+echo "Creating $USER_NAME/$NAME from the template..."
+gh repo create "$USER_NAME/$NAME" --public --template "$USER_NAME/app-template" \
+  --description "$DESC" --homepage "$URL" >/dev/null
+
+# GitHub copies the template asynchronously; wait until main exists.
+for _ in $(seq 1 30); do
+  gh api "repos/$USER_NAME/$NAME/branches/main" >/dev/null 2>&1 && break
+  sleep 2
+done
+git clone -q "git@github.com:$USER_NAME/$NAME.git" "$WORKSPACE/$NAME"
+cd "$WORKSPACE/$NAME"
+
+echo "Filling in the template..."
+NAME="$NAME" TITLE="$TITLE" DESC="$DESC" YEAR="$(date +%Y)" python3 - <<'EOF'
+import html, os, pathlib
+vals = {"__NAME__": os.environ["NAME"], "__YEAR__": os.environ["YEAR"]}
+for path in pathlib.Path(".").rglob("*"):
+    if not path.is_file() or ".git" in path.parts:
+        continue
+    text = path.read_text()
+    esc = html.escape if path.suffix == ".html" else (lambda s: s)
+    new = text.replace("__TITLE__", esc(os.environ["TITLE"])).replace("__DESCRIPTION__", esc(os.environ["DESC"]))
+    for k, v in vals.items():
+        new = new.replace(k, v)
+    if new != text:
+        path.write_text(new)
+EOF
+rm -f .template-README.md
+git add -A
+git commit -q -m "Start $TITLE from app-template"
+git push -q
+
+echo "Turning on GitHub Pages..."
+gh api -X POST "repos/$USER_NAME/$NAME/pages" -f "source[branch]=main" -f "source[path]=/" >/dev/null
+
+if [ "$LISTED" = 1 ]; then
+  gh repo edit "$USER_NAME/$NAME" --add-topic corey-app >/dev/null
+  gh workflow run deploy.yml -R "$USER_NAME/$USER_NAME.github.io" >/dev/null && \
+    echo "Rebuilding the projects page..."
+fi
+
+cat <<EOF
+
+Done.
+  Live (within a minute or two): $URL
+  Code: $WORKSPACE/$NAME
+  Repo: https://github.com/$USER_NAME/$NAME
+$( [ "$LISTED" = 1 ] && echo "  Listed on https://corey.sciu.to/projects/" || echo "  Unlisted: run 'gh repo edit $USER_NAME/$NAME --add-topic corey-app' to list it." )
+
+Next: cd $WORKSPACE/$NAME && npm install && npx playwright install chromium
+EOF
