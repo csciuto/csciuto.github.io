@@ -92,9 +92,7 @@ PAGE = """<!DOCTYPE html>
   }
   .wrap { max-width: 980px; margin: 0 auto; padding: 48px 20px 64px; }
   header { margin-bottom: 32px; }
-  header a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
-  header a:hover { color: var(--text); }
-  h1 { font-size: 2.2rem; margin: 12px 0 6px; letter-spacing: -0.02em; }
+  h1 { font-size: 2.2rem; margin: 0 0 6px; letter-spacing: -0.02em; }
   .lede { color: var(--muted); margin: 0; max-width: 60ch; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .card {
@@ -119,7 +117,6 @@ PAGE = """<!DOCTYPE html>
 <body>
 <div class="wrap">
   <header>
-    <a href="/">&larr; Corey Sciuto</a>
     <h1>Projects</h1>
     <p class="lede">Small web apps, games and data explorers I've built, most of them with AI coding tools. Everything runs in your browser, and the source for each is on GitHub.</p>
   </header>
