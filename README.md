@@ -31,3 +31,7 @@ The **Deploy site** workflow rebuilds the projects page on every push and once a
 Run it manually from the Actions tab (or `gh workflow run deploy.yml`) to update it immediately.
 
 The baby announcement in `babyannouncement/` is kept here directly. Its README explains how it works.
+
+`am-inc-exp/` only redirects the retired CPS-only income explorer to `/acs-income-explorer/`. A folder here is
+served only when no repo of the same name has Pages turned on, so this is how to keep an old app's address alive
+after deleting its repo.
