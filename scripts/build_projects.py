@@ -46,12 +46,15 @@ def preview_url(repo):
     """
     sub = urllib.parse.urlparse(repo["homepage"]).path.strip("/").split("/", 1)
     path = (sub[1] + "/" if len(sub) > 1 else "") + "preview.png"
-    try:
-        with urllib.request.urlopen(urllib.request.Request(
-                f"https://api.github.com/repos/{repo['full_name']}/contents/{path}", headers=HEADERS), timeout=20):
-            return repo["homepage"].rstrip("/") + "/preview.png"
-    except Exception:
-        return None
+    # repos deployed from docs/ by Actions serve docs/preview.png at <homepage>/preview.png
+    for p in dict.fromkeys([path, "docs/preview.png"]):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(
+                    f"https://api.github.com/repos/{repo['full_name']}/contents/{p}", headers=HEADERS), timeout=20):
+                return repo["homepage"].rstrip("/") + "/preview.png"
+        except Exception:
+            continue
+    return None
 
 
 def card(repo):
