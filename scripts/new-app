@@ -58,7 +58,7 @@ for path in pathlib.Path(".").rglob("*"):
     if new != text:
         path.write_text(new)
 EOF
-rm -f .template-README.md
+rm -f .template-README.md STANDARDS.md   # apps link to the template's copy
 
 # Pages publishes from the app's workflow (tests first), so turn it on before the first push.
 echo "Turning on GitHub Pages..."
