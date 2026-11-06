@@ -14,13 +14,16 @@ new-app <name> "<one-sentence description>" ["Display Title"] [--unlisted]
 `scripts/new-app` (linked into `~/.local/bin`) creates `csciuto/<name>` from the
 [app-template](https://github.com/csciuto/app-template) repo, fills it in, turns on Pages,
 tags it `corey-app` unless `--unlisted`, clones it into `~/workspace/<name>`, and rebuilds the
-projects page. The template includes link-preview tags and a Playwright smoke test; run
-`npm run screenshot` in the app to make the `preview.png` shown on the projects page.
+projects page. The template starts each app at the [app standards](https://github.com/csciuto/app-template/blob/main/STANDARDS.md):
+a workflow that runs the tests before every deploy and stamps the version, desktop and phone browser tests
+with accessibility checks, and a footer with contact and version. Run `npm run screenshot` in the app to make
+the `preview.png` shown on the projects page.
 
 ## How apps get published
 
 Each app lives in its own repo with GitHub Pages turned on, so GitHub serves it at
-`https://corey.sciu.to/<repo>/` automatically. Nothing in this repo needs to change.
+`https://corey.sciu.to/<repo>/` automatically. Nothing in this repo needs to change. Apps from the template
+publish through their own Actions workflow, which runs their tests first.
 
 To list an app on the projects page, give its repo:
 1. a description,

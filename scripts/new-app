@@ -59,12 +59,14 @@ for path in pathlib.Path(".").rglob("*"):
         path.write_text(new)
 EOF
 rm -f .template-README.md
+
+# Pages publishes from the app's workflow (tests first), so turn it on before the first push.
+echo "Turning on GitHub Pages..."
+gh api -X POST "repos/$USER_NAME/$NAME/pages" -f "build_type=workflow" >/dev/null
+
 git add -A
 git commit -q -m "Start $TITLE from app-template"
 git push -q
-
-echo "Turning on GitHub Pages..."
-gh api -X POST "repos/$USER_NAME/$NAME/pages" -f "source[branch]=main" -f "source[path]=/" >/dev/null
 
 if [ "$LISTED" = 1 ]; then
   gh repo edit "$USER_NAME/$NAME" --add-topic corey-app >/dev/null
