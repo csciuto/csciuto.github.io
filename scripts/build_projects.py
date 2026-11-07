@@ -151,7 +151,7 @@ PAGE = """<!DOCTYPE html>
   </header>
   <main class="grid">{{CARDS}}
   </main>
-  <p class="foot">{{COUNT}} projects &middot; <a href="https://github.com/csciuto">github.com/csciuto</a></p>
+  <p class="foot">{{COUNT}} projects &middot; Built with <a href="https://claude.com/claude-code">Claude Code</a> &middot; <a href="https://github.com/csciuto">github.com/csciuto</a></p>
 </div>
 </body>
 </html>
