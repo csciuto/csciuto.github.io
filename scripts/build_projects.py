@@ -19,6 +19,9 @@ USER = "csciuto"
 TOPIC = "corey-app"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "projects" / "index.html"
+# card order on the page
+FIRST = ["acs-income-explorer", "mercator-lab", "goob_nonna"]
+LAST = ["manhattan-density"]
 
 
 HEADERS = {"Accept": "application/vnd.github+json", "User-Agent": "build-projects"}
@@ -82,7 +85,11 @@ def main():
         r for r in fetch_repos()
         if TOPIC in r.get("topics", []) and not r["archived"] and not r["private"] and r.get("homepage")
     ]
+    # most interesting first, then the rest newest first (so new apps land just below these), then LAST
     apps.sort(key=lambda r: r["created_at"], reverse=True)
+    rank = lambda r: (FIRST.index(r["name"]) if r["name"] in FIRST else len(FIRST),
+                      LAST.index(r["name"]) if r["name"] in LAST else -1)
+    apps.sort(key=rank)   # stable: keeps newest-first within each group
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(PAGE.replace("{{CARDS}}", "".join(card(r) for r in apps)).replace("{{COUNT}}", str(len(apps))))
     # link-preview image (projects/ is generated and ignored, so it is kept here); refresh with scripts/preview.js
