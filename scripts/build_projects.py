@@ -10,6 +10,7 @@ import html
 import json
 import os
 import pathlib
+import shutil
 import urllib.parse
 import urllib.request
 from datetime import datetime
@@ -84,6 +85,8 @@ def main():
     apps.sort(key=lambda r: r["created_at"], reverse=True)
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(PAGE.replace("{{CARDS}}", "".join(card(r) for r in apps)).replace("{{COUNT}}", str(len(apps))))
+    # link-preview image (projects/ is generated and ignored, so it is kept here); refresh with scripts/preview.js
+    shutil.copy(ROOT / "scripts" / "projects-preview.png", OUT.parent / "preview.png")
     print(f"wrote {OUT.relative_to(ROOT)} with {len(apps)} projects")
 
 
