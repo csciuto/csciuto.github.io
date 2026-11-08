@@ -98,6 +98,10 @@ PAGE = """<!DOCTYPE html>
 <meta property="og:description" content="Small web apps, games and data explorers built by Corey Sciuto.">
 <meta property="og:url" content="https://corey.sciu.to/projects/">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://corey.sciu.to/projects/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico">
 <style>
   :root {
