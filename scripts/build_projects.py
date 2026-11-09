@@ -20,8 +20,8 @@ TOPIC = "corey-app"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "projects" / "index.html"
 # card order on the page
-FIRST = ["acs-income-explorer", "mercator-lab", "goob_nonna"]
-LAST = ["manhattan-density"]
+FIRST = ["acs-income-explorer", "mercator-lab", "meowpiano"]
+LAST = ["manhattan-density", "rent-gap"]
 
 
 HEADERS = {"Accept": "application/vnd.github+json", "User-Agent": "build-projects"}
