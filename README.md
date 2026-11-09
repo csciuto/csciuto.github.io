@@ -30,6 +30,15 @@ To list an app on the projects page, give its repo:
 2. a homepage URL (the live app), and
 3. the `corey-app` topic.
 
+The page groups apps in three tiers, set by a second topic:
+- `corey-app-featured`: **Featured**, polished and worth a visitor's time. Their order is `FEATURED_ORDER` in
+  `scripts/build_projects.py`.
+- no second topic: **More**, finished and working, whatever the size; newest first.
+- `corey-app-wip`: **In progress**, works but rough or not checked over yet; newest first, with a tag.
+
+Moving an app between tiers is one command, e.g. `gh repo edit csciuto/rent-gap --remove-topic corey-app-wip`,
+then rebuild.
+
 The **Deploy site** workflow rebuilds the projects page on every push and once a day.
 Run it manually from the Actions tab (or `gh workflow run deploy.yml`) to update it immediately.
 
