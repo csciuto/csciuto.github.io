@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Build projects/index.html from GitHub repos tagged with the `corey-app` topic.
 
-Each tagged repo needs a description and a homepage URL (the live app).
+Each tagged repo needs a description and a homepage URL (the live app). Its tier is a second topic:
+`corey-app-featured` (polished, worth a visitor's time), `corey-app-wip` (works, but rough or not checked
+over yet), or neither (More: finished and working, whatever its size).
 Run locally with `python3 scripts/build_projects.py`; the Deploy workflow runs
 it on every push and once a day, so a new tagged repo shows up within a day.
 Set GITHUB_TOKEN to avoid the unauthenticated API rate limit.
@@ -19,9 +21,15 @@ USER = "csciuto"
 TOPIC = "corey-app"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "projects" / "index.html"
-# card order on the page
-FIRST = ["acs-income-explorer", "mercator-lab", "meowpiano"]
-LAST = ["manhattan-density", "rent-gap"]
+FEATURED, WIP = "corey-app-featured", "corey-app-wip"
+# order within Featured (the rest of each tier is newest first)
+FEATURED_ORDER = ["meowpiano", "calibre-bench", "acs-income-explorer", "mercator-lab"]
+MORE_LAST = ["manhattan-density"]   # at the end of More
+TIERS = [  # (topic, heading, note, grid class)
+    (FEATURED, "Featured", "", "grid big"),
+    (None, "More", "", "grid more"),
+    (WIP, "In progress", "Works, but rough or not checked over yet.", "grid"),
+]
 
 
 HEADERS = {"Accept": "application/vnd.github+json", "User-Agent": "build-projects"}
@@ -61,7 +69,7 @@ def preview_url(repo):
     return None
 
 
-def card(repo):
+def card(repo, wip=False):
     e = html.escape
     img = preview_url(repo)
     shot = (f'<a class="shot" href="{e(repo["homepage"])}" tabindex="-1">'
@@ -70,7 +78,7 @@ def card(repo):
     lang = f'<span>{e(repo["language"])}</span>' if repo.get("language") else ""
     return f"""
     <article class="card">{shot}
-      <h2><a href="{e(repo["homepage"])}">{e(repo["name"])}</a></h2>
+      <h3><a href="{e(repo["homepage"])}">{e(repo["name"])}</a>{' <span class="tag">in progress</span>' if wip else ''}</h3>
       <p>{e(repo.get("description") or "")}</p>
       <footer>
         <a class="btn" href="{e(repo["homepage"])}">Open app</a>
@@ -85,13 +93,24 @@ def main():
         r for r in fetch_repos()
         if TOPIC in r.get("topics", []) and not r["archived"] and not r["private"] and r.get("homepage")
     ]
-    # most interesting first, then the rest newest first (so new apps land just below these), then LAST
-    apps.sort(key=lambda r: r["created_at"], reverse=True)
-    rank = lambda r: (FIRST.index(r["name"]) if r["name"] in FIRST else len(FIRST),
-                      LAST.index(r["name"]) if r["name"] in LAST else -1)
-    apps.sort(key=rank)   # stable: keeps newest-first within each group
+    apps.sort(key=lambda r: r["created_at"], reverse=True)   # newest first within each tier
+    tier = lambda r: FEATURED if FEATURED in r["topics"] else WIP if WIP in r["topics"] else None
+    sections = []
+    for topic, heading, note, grid in TIERS:
+        group = [r for r in apps if tier(r) == topic]
+        if topic == FEATURED:   # stable: listed ones in order, unlisted after them, newest first
+            group.sort(key=lambda r: FEATURED_ORDER.index(r["name"]) if r["name"] in FEATURED_ORDER else len(FEATURED_ORDER))
+        if topic is None:
+            group.sort(key=lambda r: MORE_LAST.index(r["name"]) if r["name"] in MORE_LAST else -1)
+        if not group:
+            continue
+        slug = heading.lower().replace(" ", "-")
+        sections.append(
+            f'\n  <section class="tier" aria-labelledby="t-{slug}">\n    <h2 id="t-{slug}">{heading}</h2>'
+            + (f'\n    <p class="note">{note}</p>' if note else "")
+            + f'\n    <div class="{grid}">' + "".join(card(r, topic == WIP) for r in group) + "\n    </div>\n  </section>")
     OUT.parent.mkdir(exist_ok=True)
-    OUT.write_text(PAGE.replace("{{CARDS}}", "".join(card(r) for r in apps)).replace("{{COUNT}}", str(len(apps))))
+    OUT.write_text(PAGE.replace("{{SECTIONS}}", "".join(sections)).replace("{{COUNT}}", str(len(apps))))
     # link-preview image (projects/ is generated and ignored, so it is kept here); refresh with scripts/preview.js
     shutil.copy(ROOT / "scripts" / "projects-preview.png", OUT.parent / "preview.png")
     print(f"wrote {OUT.relative_to(ROOT)} with {len(apps)} projects")
@@ -134,7 +153,17 @@ PAGE = """<!DOCTYPE html>
   header { margin-bottom: 32px; }
   h1 { font-size: 2.2rem; margin: 0 0 6px; letter-spacing: -0.02em; }
   .lede { color: var(--muted); margin: 0; max-width: 60ch; }
+  main { display: grid; gap: 40px; }
+  .tier { display: grid; gap: 14px; }
+  .tier > h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .note { margin: -6px 0 0; color: var(--muted); font-size: 0.9rem; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .grid.more { grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); }
+  .grid.big { grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); gap: 20px; }
+  .grid.big .card h3 { font-size: 1.35rem; }
+  .tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; vertical-align: middle;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; margin-left: 6px; }
   .card {
     background: var(--card); border: 1px solid var(--line); border-radius: 10px;
     padding: 20px; display: flex; flex-direction: column; overflow: hidden;
@@ -142,9 +171,9 @@ PAGE = """<!DOCTYPE html>
   .shot { display: block; margin: -20px -20px 16px; border-bottom: 1px solid var(--line); }
   .shot img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; object-fit: cover;
     border-radius: 10px 10px 0 0; }
-  .card h2 { font-size: 1.15rem; margin: 0 0 6px; }
-  .card h2 a { color: var(--text); text-decoration: none; }
-  .card h2 a:hover { color: var(--link); }
+  .card h3 { font-size: 1.15rem; margin: 0 0 6px; }
+  .card h3 a { color: var(--text); text-decoration: none; }
+  .card h3 a:hover { color: var(--link); }
   .card p { margin: 0 0 16px; color: var(--muted); flex: 1; }
   .card footer { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; font-size: 0.9rem; }
   .card footer a { color: var(--link); }
@@ -163,7 +192,7 @@ PAGE = """<!DOCTYPE html>
     <h1>Projects</h1>
     <p class="lede">Small web apps, games and data explorers I've built, most of them with AI coding tools. Everything runs in your browser, and the source for each is on GitHub.</p>
   </header>
-  <main class="grid">{{CARDS}}
+  <main>{{SECTIONS}}
   </main>
   <p class="foot">{{COUNT}} projects &middot; Built with <a href="https://claude.com/claude-code">Claude Code</a> &middot; <a href="https://github.com/csciuto">github.com/csciuto</a></p>
 </div>
