@@ -5,7 +5,8 @@ starts and lists apps (`scripts/new-app`, `scripts/build_projects.py`). See READ
 
 ## Rules
 
-- **No links between the About page and `/projects/`, in either direction.** Honor exclusions like this
+- **`/projects/` links to the About page (as "Corey Sciuto"); the About page does not link to `/projects/`.**
+  Don't add that direction unless asked. Honor exclusions like this
   literally, including in generated pages and footers.
 - Apps live in their own repos and follow `STANDARDS.md` in
   [csciuto/app-template](https://github.com/csciuto/app-template). Change shared app conventions there, not

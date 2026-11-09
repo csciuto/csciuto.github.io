@@ -168,6 +168,8 @@ PAGE = """<!DOCTYPE html>
   header { margin-bottom: 32px; }
   h1 { font-size: 2.2rem; margin: 0 0 6px; letter-spacing: -0.02em; }
   .lede { color: var(--muted); margin: 0; max-width: 60ch; }
+  .byline { display: inline-block; margin-bottom: 6px; color: var(--muted); text-decoration: none; font-weight: 600; letter-spacing: 0.01em; }
+  .byline:hover { color: var(--link); text-decoration: underline; }
   main { display: grid; gap: 40px; }
   .tier { display: grid; gap: 14px; }
   .tier > h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0;
@@ -204,12 +206,13 @@ PAGE = """<!DOCTYPE html>
 <body>
 <div class="wrap">
   <header>
+    <a class="byline" href="https://corey.sciu.to/">Corey Sciuto</a>
     <h1>Projects</h1>
     <p class="lede">Small web apps, games and data explorers I've built, most of them with AI coding tools. Everything runs in your browser, and the source for each is on GitHub.</p>
   </header>
   <main>{{SECTIONS}}
   </main>
-  <p class="foot">{{COUNT}} projects &middot; Built with <a href="https://claude.com/claude-code">Claude Code</a> &middot; <a href="https://github.com/csciuto">github.com/csciuto</a></p>
+  <p class="foot">{{COUNT}} projects &middot; Built with <a href="https://claude.com/claude-code">Claude Code</a> &middot; <a href="https://corey.sciu.to/">Corey Sciuto</a></p>
 </div>
 </body>
 </html>
