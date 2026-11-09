@@ -33,8 +33,11 @@ To list an app on the projects page, give its repo:
 The page groups apps in three tiers, set by a second topic:
 - `corey-app-featured`: **Featured**, polished and worth a visitor's time. Their order is `FEATURED_ORDER` in
   `scripts/build_projects.py`.
+- `corey-app-wip`: **In progress**, works but rough or not checked over yet; `WIP_ORDER` first, then newest
+  first, each with a tag.
 - no second topic: **More**, finished and working, whatever the size; newest first.
-- `corey-app-wip`: **In progress**, works but rough or not checked over yet; newest first, with a tag.
+
+A card links to the repo's `ARCHITECTURE.md` ("How it's built") when it has one.
 
 Moving an app between tiers is one command, e.g. `gh repo edit csciuto/rent-gap --remove-topic corey-app-wip`,
 then rebuild.

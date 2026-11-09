@@ -24,11 +24,12 @@ OUT = ROOT / "projects" / "index.html"
 FEATURED, WIP = "corey-app-featured", "corey-app-wip"
 # order within Featured (the rest of each tier is newest first)
 FEATURED_ORDER = ["meowpiano", "calibre-bench", "acs-income-explorer", "mercator-lab"]
+WIP_ORDER = ["goob_nonna"]   # first in In progress
 MORE_LAST = ["manhattan-density"]   # at the end of More
 TIERS = [  # (topic, heading, note, grid class)
     (FEATURED, "Featured", "", "grid big"),
+    (WIP, "In progress", "Works, but rough or not checked over yet.", "grid more"),
     (None, "More", "", "grid more"),
-    (WIP, "In progress", "Works, but rough or not checked over yet.", "grid"),
 ]
 
 
@@ -69,6 +70,16 @@ def preview_url(repo):
     return None
 
 
+def architecture_url(repo):
+    """The repo's ARCHITECTURE.md on GitHub (how it's built), if it has one."""
+    try:
+        with urllib.request.urlopen(urllib.request.Request(
+                f"https://api.github.com/repos/{repo['full_name']}/contents/ARCHITECTURE.md", headers=HEADERS), timeout=20):
+            return f"{repo['html_url']}/blob/{repo['default_branch']}/ARCHITECTURE.md"
+    except Exception:
+        return None
+
+
 def card(repo, wip=False):
     e = html.escape
     img = preview_url(repo)
@@ -76,13 +87,15 @@ def card(repo, wip=False):
             f'<img src="{e(img)}" alt="" loading="lazy" width="1200" height="630"></a>') if img else ""
     made = datetime.strptime(repo["created_at"][:10], "%Y-%m-%d").strftime("%b %Y")
     lang = f'<span>{e(repo["language"])}</span>' if repo.get("language") else ""
+    arch = architecture_url(repo)
+    built = f'\n        <a href="{e(arch)}">How it\'s built</a>' if arch else ""
     return f"""
     <article class="card">{shot}
       <h3><a href="{e(repo["homepage"])}">{e(repo["name"])}</a>{' <span class="tag">in progress</span>' if wip else ''}</h3>
       <p>{e(repo.get("description") or "")}</p>
       <footer>
         <a class="btn" href="{e(repo["homepage"])}">Open app</a>
-        <a href="{e(repo["html_url"])}">Source</a>
+        <a href="{e(repo["html_url"])}">Source</a>{built}
         <span class="meta">{lang}<span>{made}</span></span>
       </footer>
     </article>"""
@@ -102,6 +115,8 @@ def main():
             group.sort(key=lambda r: FEATURED_ORDER.index(r["name"]) if r["name"] in FEATURED_ORDER else len(FEATURED_ORDER))
         if topic is None:
             group.sort(key=lambda r: MORE_LAST.index(r["name"]) if r["name"] in MORE_LAST else -1)
+        if topic == WIP:
+            group.sort(key=lambda r: WIP_ORDER.index(r["name"]) if r["name"] in WIP_ORDER else len(WIP_ORDER))
         if not group:
             continue
         slug = heading.lower().replace(" ", "-")
