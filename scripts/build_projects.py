@@ -24,7 +24,7 @@ OUT = ROOT / "projects" / "index.html"
 FEATURED, WIP = "corey-app-featured", "corey-app-wip"
 # order within Featured (the rest of each tier is newest first)
 FEATURED_ORDER = ["meowpiano", "calibre-bench", "acs-income-explorer", "mercator-lab"]
-WIP_ORDER = ["goob_nonna"]   # first in In progress
+WIP_ORDER: list[str] = []   # first in In progress, in this order
 MORE_LAST = ["manhattan-density"]   # at the end of More
 TIERS = [  # (topic, heading, note, grid class)
     (FEATURED, "Featured", "", "grid big"),
